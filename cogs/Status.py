@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands, tasks
 import random
 
+
 class Status(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -17,7 +18,7 @@ class Status(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Status.py is ready")
-    
+
+
 async def setup(client):
     await client.add_cog(Status(client))
-    
