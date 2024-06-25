@@ -34,7 +34,7 @@ For a full list of dependencies, refer to the [requirements.txt](requirements.tx
 1. Clone the repository:
 
    ```shell
-   git clone <repository-url>
+   git clone git@github.com:Elias2660/Proompter.git
    ```
 
 2. Create a virtual environment:
