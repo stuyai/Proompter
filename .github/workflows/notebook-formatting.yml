@@ -22,7 +22,7 @@ jobs:
           find . -name "*.ipynb" -exec black {} \; || true
       - name: Set Git Identity
         run: |
-          git config --global user.email "flam0799@gmail.com"
+          git config --global user.email "124101026+Elias2660@users.noreply.github.com"
           git config --global user.name "Elias Xu"
       - name: Check for changes
         id: changes
