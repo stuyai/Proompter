@@ -12,9 +12,9 @@ This project is a Python-based chatbot that utilizes various libraries to provid
 
 ## Features
 
-- **ChatBot Prompts**: Handles dynamic conversation flows.
-- **Ping**: Checks and reports server status.
-- **Status**: Provides the current status of the chatbot.
+- **[ChatBot Prompts](cogs/ChatBotPrompts.py)**: Handles dynamic conversation flows.
+- **[Ping](cogs/Ping.py)**: Checks and reports server status.
+- **[Status](cogs/Status.py)**: Provides the current status of the chatbot.
 
 ## Dependencies
 
@@ -31,7 +31,7 @@ For a full list of dependencies, refer to the [requirements.txt](requirements.tx
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the [repository](https://github.com/Elias2660/Proompter):
 
    ```shell
    git clone git@github.com:Elias2660/Proompter.git
@@ -43,7 +43,7 @@ For a full list of dependencies, refer to the [requirements.txt](requirements.tx
    python -m venv venv
    ```
 
-3. Activate the virtual environmentctivate the virtual environment:
+3. Activate the virtual environment:
 
    - On Windows:
 
@@ -77,4 +77,4 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.

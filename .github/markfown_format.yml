@@ -1,0 +1,34 @@
+name: Markdown Format
+
+on:
+  push:
+    paths:
+      - "**.md"
+  pull_request:
+    paths:
+      - "**.md"
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Install Prettier
+        run: npm install --save-dev --save-exact prettier
+
+      - name: Format Markdown files
+        run: npx prettier --write "**/*.md"
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply markdown formatting
+          file_pattern: ./*.md
