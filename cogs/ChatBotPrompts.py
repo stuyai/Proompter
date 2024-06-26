@@ -10,6 +10,9 @@ class ChatBotPrompts(commands.Cog):
 
     @app_commands.command(name="simple_query", description="Give a simple query to the bot")
     async def simple_query(self, interaction: discord.Interaction, message:str):
+        if (len(message) < 1):
+            await interaction.response.send_message("Please provide a query")
+            return
         response = gptFunctions.perform_gpt_query(message)
         embed = discord.Embed(title="Chatbot Prompt", color=discord.Color.blue())
         embed.set_author(name=f"query by {interaction.user.display_name} and response from GPT-4o", icon_url=interaction.user.avatar)

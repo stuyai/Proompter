@@ -4,11 +4,13 @@ This project is a Python-based chatbot that utilizes various libraries to provid
 
 ## TODO
 
-- Adding a system so that people don't spam queries (and getting that so that the system can adjust to meet spending limits)
+- Adding a system so that people don't spam queries (and getting that so that the system can adjust to meet spending limits). Something related to economy, but I'm not sure.
 
 - Building an informed query section, that can search up good context.
 
 - Creating a proompter section, which asks a question based on some news -> probably add some schedulability.
+
+- Reaction role section -> don't know how that'll be done, but it'll be helpful.
 
 ## Features
 
