@@ -27,6 +27,7 @@ The project relies on several third-party libraries, including:
 - `aiohttp` for asynchronous HTTP requests.
 - `distro` for Linux distribution information.
 - `sniffio` for detecting the async library in use.
+- `discord.py` for directly interfacing with Discord.
 - `openai` for accessing OpenAI's APIs.
 
 For a full list of dependencies, refer to the [requirements.txt](requirements.txt) file.
@@ -59,15 +60,22 @@ For a full list of dependencies, refer to the [requirements.txt](requirements.tx
      source venv/bin/activate
      ```
 
-4. Install the dependencies:
+4. Install the [dependencies](requirements.txt):
 
    ```sh
    pip install -r requirements.txt
    ```
 
+5. Add an env file with the following information with the following structure. Read about creating your own [Discord](https://discord.com/) bot and application [here](https://www.geeksforgeeks.org/discord-bot-in-python/) and [here](https://realpython.com/how-to-make-a-discord-bot-python/), and learn about using gpt and creating your own API key [here](https://platform.openai.com/docs/overview).
+
+   ```env
+   export BOT_TOKEN="<Insert the token for your bot here>"
+   export GPT_API_KEY="<>"
+   ```
+
 ## Usage
 
-Run the main script to start the chatbot:
+Run the [main script](main.py) to start the chatbot:
 
 ```sh
 python main.py
@@ -75,7 +83,11 @@ python main.py
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit pull requests or open issues to discuss potential improvements or features.
+[Contributions](CONTRIBUTING.md) are welcome! Please feel free to submit pull requests or open issues to discuss potential improvements or features.
+
+## Code of Conduct
+
+Please don't be a bad person! Check out the [code of conduct](CODE_OF_CONDUCT.md) for more details.
 
 ## License
 
