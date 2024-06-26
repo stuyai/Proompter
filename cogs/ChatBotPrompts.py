@@ -9,9 +9,11 @@ class ChatBotPrompts(commands.Cog):
         self.client = client
         super().__init__()
 
-    @app_commands.command(name="simple_query", description="Give a simple query to the bot")
-    async def simple_query(self, interaction: discord.Interaction, message:str):
-        if (len(message) < 1):
+    @app_commands.command(
+        name="simple_query", description="Give a simple query to the bot"
+    )
+    async def simple_query(self, interaction: discord.Interaction, message: str):
+        if len(message) < 1:
             await interaction.response.send_message("Please provide a query")
             return
         response = gptFunctions.perform_gpt_query(message)
