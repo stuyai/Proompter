@@ -70,7 +70,7 @@ For a full list of dependencies, refer to the [requirements.txt](requirements.tx
 
    ```env
    export BOT_TOKEN="<Insert the token for your bot here>"
-   export GPT_API_KEY="<>"
+   export GPT_API_KEY="<Insert your gpt api key here>"
    ```
 
 ## Usage
