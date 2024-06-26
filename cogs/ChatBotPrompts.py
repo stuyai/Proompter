@@ -3,6 +3,7 @@ from discord.ext import commands
 import discord
 from utils import gptFunctions
 
+
 class ChatBotPrompts(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
@@ -15,7 +16,10 @@ class ChatBotPrompts(commands.Cog):
             return
         response = gptFunctions.perform_gpt_query(message)
         embed = discord.Embed(title="Chatbot Prompt", color=discord.Color.blue())
-        embed.set_author(name=f"query by {interaction.user.display_name} and response from GPT-4o", icon_url=interaction.user.avatar)
+        embed.set_author(
+            name=f"query by {interaction.user.display_name} and response from GPT-4o",
+            icon_url=interaction.user.avatar,
+        )
         embed.add_field(name="Query", value=message, inline=False)
         embed.add_field(name="Response", value=response, inline=False)
         await interaction.response.send_message(embed=embed)
@@ -23,6 +27,7 @@ class ChatBotPrompts(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("ChatBotPrompts.py is ready")
+
 
 async def setup(client):
     await client.add_cog(ChatBotPrompts(client))
