@@ -26,6 +26,7 @@ async def load_cogs():
         if filename.endswith(".py"):
             await client.load_extension(f"cogs.{filename[:-3]}")
 
+
 # error handling
 @client.event
 async def on_command_error(ctx, error):
