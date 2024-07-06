@@ -4,7 +4,7 @@ annotated-types==0.7.0
 anyio==4.4.0
 appdirs==1.4.4
 attrs==23.2.0
-certifi==2024.6.2
+certifi==2024.7.4
 charset-normalizer==3.3.2
 discord.py==2.4.0
 distro==1.9.0
