@@ -6,7 +6,7 @@ appdirs==1.4.4
 appnope==0.1.4
 asttokens==2.4.1
 attrs==23.2.0
-certifi==2024.7.4
+certifi==2024.6.2
 charset-normalizer==3.3.2
 comm==0.2.2
 debugpy==1.8.2
@@ -45,7 +45,6 @@ pydantic==2.7.4
 pydantic_core==2.18.4
 pyee==11.1.0
 Pygments==2.18.0
-pyppeteer==2.0.0
 pytest==8.2.2
 pytest-base-url==2.1.0
 pytest-playwright==0.5.1

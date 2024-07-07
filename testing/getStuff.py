@@ -21,7 +21,8 @@ async def main():
     print("Text in <p> tags:")
     text = " ".join(p_texts)
     text.replace("  ", " ")
-    print(text)
+    return text
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    print(asyncio.run(main()))
+    # scrape_p_text("https://www.bbc.com/news/articles/cq5xjzqree2o")
