@@ -106,7 +106,9 @@ async def createQOTW(websites: str, model: str = "gpt-4o") -> str:
         return f"Invalid model. Please run the prompting help command to find the right model to use."
     try:
         client = OpenAI(api_key=API_KEY)
-        website_list = [website.strip().replace("\"", "") for website in websites.split(",")]
+        website_list = [
+            website.strip().replace('"', "") for website in websites.split(",")
+        ]
         data = "\n".join(
             [
                 f"Website Source: {website} \n {await scrape_p_text(website)}"
@@ -166,6 +168,7 @@ async def main():
         "https://www.bbc.com/news/articles/cp08y5p52e2o, https://www.bbc.com/news/articles/cldyeykzp33o"
     )
     return response
+
 
 if __name__ == "__main__":
     response = asyncio.run(main())

@@ -46,29 +46,34 @@ class ChatBotPrompts(commands.Cog):
 
     @app_commands.command()
     async def prompting_help(self, interaction: discord.Interaction): ...
-    
-    @app_commands.command(name="list_models", description="List all the models that can be used by prompting")
+
+    @app_commands.command(
+        name="list_models",
+        description="List all the models that can be used by prompting",
+    )
     async def list_models(self, interaction: discord.Interaction):
         models = {
-        "gpt-4o",
-        "gpt-4o-2024-05-13",
-        "gpt-3.5-turbo",
-        "gpt-4-turbo-2024-04-09",
-        "gpt-4-turbo-preview",
-        "gpt-4-0125-preview",
-        "gpt-4-1106-preview",
-        "gpt-4",
-        "gpt-4-0613",
-        "gpt-4-0314",
-        "gpt-3.5-turbo-0125",
-        "gpt-3.5-turbo",
-        "gpt-3.5-turbo-1106",
-        "gpt-3.5-turbo-instruct",
+            "gpt-4o",
+            "gpt-4o-2024-05-13",
+            "gpt-3.5-turbo",
+            "gpt-4-turbo-2024-04-09",
+            "gpt-4-turbo-preview",
+            "gpt-4-0125-preview",
+            "gpt-4-1106-preview",
+            "gpt-4",
+            "gpt-4-0613",
+            "gpt-4-0314",
+            "gpt-3.5-turbo-0125",
+            "gpt-3.5-turbo",
+            "gpt-3.5-turbo-1106",
+            "gpt-3.5-turbo-instruct",
         }
         await interaction.response.send_message("\n".join(models))
-        
-        
-    @app_commands.command(name="max_tokens", description="lists the max number of context tokens a model can have")
+
+    @app_commands.command(
+        name="max_tokens",
+        description="lists the max number of context tokens a model can have",
+    )
     async def max_tokens(self, interaction: discord.Interaction):
         openAI_max_context = {
             "gpt-4o": 128000,
@@ -86,7 +91,14 @@ class ChatBotPrompts(commands.Cog):
             "gpt-3.5-turbo-1106": 16385,
             "gpt-3.5-turbo-instruct": 4096,
         }
-        await interaction.response.send_message("\n".join([f"{key}:" + " {:,}".format(int(value)) for key, value in openAI_max_context.items()]))
+        await interaction.response.send_message(
+            "\n".join(
+                [
+                    f"{key}:" + " {:,}".format(int(value))
+                    for key, value in openAI_max_context.items()
+                ]
+            )
+        )
 
 
 async def setup(client):
