@@ -35,10 +35,13 @@ class ChatBotPrompts(commands.Cog):
     async def qotw(self, interaction: discord.Interaction, websites: str):
         # https://stackoverflow.com/questions/67249570/how-do-i-mention-everyone-in-discord-py
         await interaction.response.defer()
-        response = await gptFunctions.createQOTW(websites)
-        await interaction.followup.send(
-            response, allowed_mentions=discord.AllowedMentions(everyone=True)
-        )
+        try:
+            response = await gptFunctions.createQOTW(websites)
+            await interaction.followup.send(
+                response, allowed_mentions=discord.AllowedMentions(everyone=True)
+            )
+        except Exception as e:
+            await interaction.followup.send(f"An error occured: {e}", ephemeral=True)
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -46,7 +49,8 @@ class ChatBotPrompts(commands.Cog):
 
     @app_commands.command()
     async def prompting_help(self, interaction: discord.Interaction): ...
-
+    
+    @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
         name="list_models",
         description="List all the models that can be used by prompting",
@@ -70,6 +74,7 @@ class ChatBotPrompts(commands.Cog):
         }
         await interaction.response.send_message("\n".join(models))
 
+    @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
         name="max_tokens",
         description="lists the max number of context tokens a model can have",
