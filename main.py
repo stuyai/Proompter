@@ -30,7 +30,7 @@ async def load_cogs():
 # error handling
 @client.event
 async def on_command_error(ctx, error):
-    await ctx.send(f"Sorry, but there was an error: {error}", ephemeral = True)
+    await ctx.send(f"Sorry, but there was an error: {error}", ephemeral=True)
 
 
 async def main():
