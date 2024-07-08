@@ -37,8 +37,9 @@ class ChatBotPrompts(commands.Cog):
         await interaction.response.defer()
         try:
             response = await gptFunctions.createQOTW(websites)
+            sources =f"Sources: \n{"\n".join(" ".join(source.split()) for source in websites.split(","))}"
             await interaction.followup.send(
-                response, allowed_mentions=discord.AllowedMentions(everyone=True)
+                response + "\n\n" + sources, allowed_mentions=discord.AllowedMentions(everyone=True), suppress_embeds=True
             )
         except Exception as e:
             await interaction.followup.send(f"An error occured: {e}", ephemeral=True)
