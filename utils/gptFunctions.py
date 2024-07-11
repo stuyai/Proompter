@@ -82,6 +82,34 @@ system_message = "You are a bot for a discord server, and you are here to answer
 def perform_gpt_query(
     context: str = system_message, query: str = "Hi!", model: str = "gpt-4o"
 ) -> str:
+    """
+
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
+
+    """
     if model not in models:
         return f"Invalid model. Please run the prompting help command to find the right model to use."
     try:
