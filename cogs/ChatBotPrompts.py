@@ -37,9 +37,11 @@ class ChatBotPrompts(commands.Cog):
         await interaction.response.defer()
         try:
             response = await gptFunctions.createQOTW(websites)
-            sources =f"Sources: \n{"\n".join(" ".join(source.split()) for source in websites.split(","))}"
+            sources = f"Sources: \n{"\n".join(" ".join(source.split()) for source in websites.split(","))}"
             await interaction.followup.send(
-                response + "\n\n" + sources, allowed_mentions=discord.AllowedMentions(everyone=True), suppress_embeds=True
+                response + "\n\n" + sources,
+                allowed_mentions=discord.AllowedMentions(everyone=True),
+                suppress_embeds=True,
             )
         except Exception as e:
             await interaction.followup.send(f"An error occured: {e}", ephemeral=True)
@@ -50,7 +52,7 @@ class ChatBotPrompts(commands.Cog):
 
     @app_commands.command()
     async def prompting_help(self, interaction: discord.Interaction): ...
-    
+
     @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
         name="list_models",
