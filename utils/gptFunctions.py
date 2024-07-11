@@ -239,4 +239,10 @@ def get_output_contexts() -> set:
 
 if __name__ == "__main__":
     print("hello")
-    print(perform_google_query(system_message, "Write a poem about Discord in the writing of Emily Dickenson", "gemini-1.5-pro"))
+    print(
+        perform_google_query(
+            system_message,
+            "Write a poem about Discord in the writing of Emily Dickenson",
+            "gemini-1.5-pro",
+        )
+    )
