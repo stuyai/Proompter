@@ -1,3 +1,5 @@
+import os
+import dotenv
 import asyncio
 from openai import OpenAI
 import tiktoken
@@ -71,8 +73,6 @@ OpenAI_Output_Million_Token_Cost = {
     "gpt-3.5-turbo-instruct": 2,
 }
 
-import dotenv
-import os
 
 dotenv.load_dotenv()
 API_KEY = os.getenv("GPT_API_KEY")
@@ -127,8 +127,8 @@ def perform_gpt_query(
     except Exception as e:
         print(e)
         return f"An error occurred: {e}"
-    
-    
+
+
 # def perform_facebook_query(context: str = system_message, query: str = "Hi!", model: str = ) -> str:
 
 
