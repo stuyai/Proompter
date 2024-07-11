@@ -99,6 +99,9 @@ def perform_gpt_query(
     except Exception as e:
         print(e)
         return f"An error occurred: {e}"
+    
+    
+# def perform_facebook_query(context: str = system_message, query: str = "Hi!", model: str = ) -> str:
 
 
 async def createQOTW(websites: str, model: str = "gpt-4o") -> str:
