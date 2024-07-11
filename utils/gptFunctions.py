@@ -1,8 +1,10 @@
-import os
-import dotenv
 import asyncio
-from openai import OpenAI
+import os
+
+import dotenv
 import tiktoken
+from openai import OpenAI
+
 from .scrapeWebsites import scrape_p_text
 
 models = {
