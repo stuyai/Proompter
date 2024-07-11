@@ -110,6 +110,9 @@ def perform_gpt_query(
     :param context: str:  (Default value = system_message)
     :param query: str:  (Default value = "Hi!")
     :param model: str:  (Default value = "gpt-4o")
+    :param context: str:  (Default value = system_message)
+    :param query: str:  (Default value = "Hi!")
+    :param model: str:  (Default value = "gpt-4o")
 
     """
     if model not in models:
@@ -182,16 +185,35 @@ bonus business question, have you noticed any problems with how current robotics
 
 
 def get_cost(prompt: str, output: str, model: str) -> int:
+    """
+
+    :param prompt: str: 
+    :param output: str: 
+    :param model: str: 
+
+    """
     # returns the cost in terms of dollars
     ...
 
 
 def get_encodings(text: str, model: str = "gpt-4o") -> list:
+    """
+
+    :param text: str: 
+    :param model: str:  (Default value = "gpt-4o")
+
+    """
     encoding = tiktoken.encoding_for_model(model)
     return encoding.encode(text)
 
 
 def get_number_of_tokens(text: str, model: str = "gpt-4o") -> list:
+    """
+
+    :param text: str: 
+    :param model: str:  (Default value = "gpt-4o")
+
+    """
     encoding = tiktoken.encoding_for_model(model)
     return len(encoding.encode(text))
 
