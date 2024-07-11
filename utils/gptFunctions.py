@@ -1,9 +1,10 @@
 import asyncio
 from openai import OpenAI
 import tiktoken
-from .scrapeWebsites import scrape_p_text
+from utils.scrapeWebsites import scrape_p_text
+import google.generativeai as genai
 
-models = {
+gpt_models = {
     "gpt-4o",
     "gpt-4o-2024-05-13",
     "gpt-3.5-turbo",
@@ -82,7 +83,7 @@ system_message = "You are a bot for a discord server, and you are here to answer
 def perform_gpt_query(
     context: str = system_message, query: str = "Hi!", model: str = "gpt-4o"
 ) -> str:
-    if model not in models:
+    if model not in gpt_models:
         return f"Invalid model. Please run the prompting help command to find the right model to use."
     try:
         client = OpenAI(api_key=API_KEY)
@@ -99,13 +100,54 @@ def perform_gpt_query(
     except Exception as e:
         print(e)
         return f"An error occurred: {e}"
-    
-    
+
+
+GOOGLE_API = os.getenv("GOOGLE_API")
+genai.configure(api_key=GOOGLE_API)
 # def perform_facebook_query(context: str = system_message, query: str = "Hi!", model: str = ) -> str:
+
+google_models = {
+    "gemini-1.0-pro",
+    "gemini-1.5-flash",
+    "gemini-1.5-pro",
+}
+
+gemini_max_context = {
+    "gemini-1.0-pro": genai.get_model("models/gemini-1.0-pro").input_token_limit,
+    "gemini-1.5-flash": genai.get_model("models/gemini-1.5-flash").input_token_limit,
+    "gemini-1.5-pro": genai.get_model("models/gemini-1.5-pro").input_token_limit,
+}
+
+gemini_max_output = {
+    "gemini-1.0-pro": genai.get_model("models/gemini-1.0-pro").output_token_limit,
+    "gemini-1.5-flash": genai.get_model("models/gemini-1.5-flash").output_token_limit,
+    "gemini-1.5-pro": genai.get_model("models/gemini-1.5-pro").output_token_limit,
+}
+
+
+def perform_google_query(
+    context: str = system_message, query: str = "Hi!", model: str = "gemini-1.5-flash"
+) -> str:
+    try:
+        if model in google_models:
+            model = model.strip()
+            client = genai.GenerativeModel(model_name=f"models/{model}")
+            message = f"-----Context---- \n {context} \n -----Query----- \n {query}"
+            if (
+                int(str(client.count_tokens(message)).split()[1].strip())
+                <= genai.get_model(f"models/{model}").input_token_limit
+            ):
+                response = client.generate_content(query)
+                return response.text
+            return "The query is too long. Please try again with a shorter query."
+        else:
+            return f"Invalid model. Please run the prompting help command to find the right model to use."
+    except Exception as e:
+        return f"An error occurred: {e}"
 
 
 async def createQOTW(websites: str, model: str = "gpt-4o") -> str:
-    if model not in models:
+    if model not in gpt_models and model:
         return f"Invalid model. Please run the prompting help command to find the right model to use."
     try:
         client = OpenAI(api_key=API_KEY)
@@ -166,13 +208,35 @@ def get_number_of_tokens(text: str, model: str = "gpt-4o") -> list:
     return len(encoding.encode(text))
 
 
-async def main():
-    response = await createQOTW(
-        "https://www.bbc.com/news/articles/cp08y5p52e2o, https://www.bbc.com/news/articles/cldyeykzp33o"
-    )
-    return response
+def get_models() -> set:
+    try:
+        model_lists = [gpt_models, google_models]
+        bl = set()
+        for model_list in model_lists:
+            bl = bl.union(model_list)
+        return bl
+    except Exception as e:
+        print(e)
+        return "An error occurred"
+
+
+def get_input_contexts() -> set:
+    context_lists = [openAI_max_context, gemini_max_context]
+    bl = {}
+    for context_list in context_lists:
+        bl.update(context_list)
+    print(bl)
+    return bl
+
+
+def get_output_contexts() -> set:
+    context_lists = [openAI_max_context, gemini_max_output]
+    bl = {}
+    for context_list in context_lists:
+        bl.update(context_list)
+    return bl
 
 
 if __name__ == "__main__":
-    response = asyncio.run(main())
-    print(response)
+    print("hello")
+    print(perform_google_query(system_message, "Write a poem about Discord in the writing of Emily Dickenson", "gemini-1.5-pro"))

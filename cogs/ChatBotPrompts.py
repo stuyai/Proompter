@@ -16,18 +16,27 @@ class ChatBotPrompts(commands.Cog):
     async def simple_query(
         self, interaction: discord.Interaction, message: str, model: str = "gpt-4o"
     ):
-        if len(message) < 1:
-            await interaction.response.send_message("Please provide a query")
-            return
-        response = gptFunctions.perform_gpt_query(query=message, model=model)
-        embed = discord.Embed(title="Chatbot Prompt", color=discord.Color.blue())
-        embed.set_author(
-            name=f"query by {interaction.user.display_name} and response from {model}",
-            icon_url=interaction.user.avatar,
-        )
-        embed.add_field(name="Query", value=message, inline=False)
-        embed.add_field(name="Response", value=response, inline=False)
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.defer()
+        try:
+            if len(message) < 1:
+                await interaction.response.send_message("Please provide a query")
+                return
+            
+            if "gpt" in model:
+                response = gptFunctions.perform_gpt_query(query=message, model=model)
+            elif "gemini" in model:
+                response = gptFunctions.perform_google_query(query=message, model=model)
+            
+            embed = discord.Embed(title="Chatbot Prompt", color=discord.Color.blue())
+            embed.set_author(
+                name=f"query by {interaction.user.display_name} and response from {model}",
+                icon_url=interaction.user.avatar,
+            )
+            embed.add_field(name="Query", value=message, inline=False)
+            embed.add_field(name="Response", value=response, inline=False)
+            await interaction.followup.send(embed=embed)
+        except Exception as e:
+            await interaction.followup.send(f"An error occured: {e}", ephemeral=True)
 
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.command(name="qotw", description="Get the question of the week")
@@ -59,55 +68,28 @@ class ChatBotPrompts(commands.Cog):
         description="List all the models that can be used by prompting",
     )
     async def list_models(self, interaction: discord.Interaction):
-        models = {
-            "gpt-4o",
-            "gpt-4o-2024-05-13",
-            "gpt-3.5-turbo",
-            "gpt-4-turbo-2024-04-09",
-            "gpt-4-turbo-preview",
-            "gpt-4-0125-preview",
-            "gpt-4-1106-preview",
-            "gpt-4",
-            "gpt-4-0613",
-            "gpt-4-0314",
-            "gpt-3.5-turbo-0125",
-            "gpt-3.5-turbo",
-            "gpt-3.5-turbo-1106",
-            "gpt-3.5-turbo-instruct",
-        }
+        models = gptFunctions.get_models()
         await interaction.response.send_message("\n".join(models))
 
     @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
-        name="max_tokens",
+        name="max_context",
         description="lists the max number of context tokens a model can have",
     )
-    async def max_tokens(self, interaction: discord.Interaction):
-        openAI_max_context = {
-            "gpt-4o": 128000,
-            "gpt-4o-2024-05-13": 128000,
-            "gpt-3.5-turbo": 128000,
-            "gpt-4-turbo-2024-04-09": 128000,
-            "gpt-4-turbo-preview": 128000,
-            "gpt-4-0125-preview": 128000,
-            "gpt-4-1106-preview": 128000,
-            "gpt-4": 8192,
-            "gpt-4-0613": 8192,
-            "gpt-4-0314": 8192,
-            "gpt-3.5-turbo-0125": 16385,
-            "gpt-3.5-turbo": 16385,
-            "gpt-3.5-turbo-1106": 16385,
-            "gpt-3.5-turbo-instruct": 4096,
-        }
-        await interaction.response.send_message(
-            "\n".join(
-                [
-                    f"{key}:" + " {:,}".format(int(value))
-                    for key, value in openAI_max_context.items()
-                ]
-            )
-        )
+    async def max_context(self, interaction: discord.Interaction):
+        context = gptFunctions.get_input_contexts()
+        await interaction.response.send_message("\n".join(f"{key}: {value}" for key, value in context.items()))
+        
+    @commands.cooldown(1, 15, commands.BucketType.user)
+    @app_commands.command(
+        name="max_output",
+        description="lists the max number of output tokens a model can have",
+    )
+    async def max_output(self, interaction: discord.Interaction):
+        output = gptFunctions.get_output_contexts()
+        await interaction.response.send_message("\n".join(f"{key}: {value}" for key, value in output.items()))
 
+        
 
 async def setup(client):
     await client.add_cog(ChatBotPrompts(client))
