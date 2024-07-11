@@ -21,12 +21,12 @@ class ChatBotPrompts(commands.Cog):
             if len(message) < 1:
                 await interaction.response.send_message("Please provide a query")
                 return
-            
+
             if "gpt" in model:
                 response = gptFunctions.perform_gpt_query(query=message, model=model)
             elif "gemini" in model:
                 response = gptFunctions.perform_google_query(query=message, model=model)
-            
+
             embed = discord.Embed(title="Chatbot Prompt", color=discord.Color.blue())
             embed.set_author(
                 name=f"query by {interaction.user.display_name} and response from {model}",
@@ -78,8 +78,10 @@ class ChatBotPrompts(commands.Cog):
     )
     async def max_context(self, interaction: discord.Interaction):
         context = gptFunctions.get_input_contexts()
-        await interaction.response.send_message("\n".join(f"{key}: {value}" for key, value in context.items()))
-        
+        await interaction.response.send_message(
+            "\n".join(f"{key}: {value}" for key, value in context.items())
+        )
+
     @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
         name="max_output",
@@ -87,9 +89,10 @@ class ChatBotPrompts(commands.Cog):
     )
     async def max_output(self, interaction: discord.Interaction):
         output = gptFunctions.get_output_contexts()
-        await interaction.response.send_message("\n".join(f"{key}: {value}" for key, value in output.items()))
+        await interaction.response.send_message(
+            "\n".join(f"{key}: {value}" for key, value in output.items())
+        )
 
-        
 
 async def setup(client):
     await client.add_cog(ChatBotPrompts(client))
