@@ -75,15 +75,14 @@ OpenAI_Output_Million_Token_Cost = {
     "gpt-3.5-turbo-instruct": 2,
 }
 
-
 dotenv.load_dotenv()
 API_KEY = os.getenv("GPT_API_KEY")
 system_message = "You are a bot for a discord server, and you are here to answer queries with flair and kindness. You give honesty, rather than flattery. "
 
 
-def perform_gpt_query(
-    context: str = system_message, query: str = "Hi!", model: str = "gpt-4o"
-) -> str:
+def perform_gpt_query(context: str = system_message,
+                      query: str = "Hi!",
+                      model: str = "gpt-4o") -> str:
     """
 
     :param context: str:  (Default value = system_message)
@@ -119,12 +118,19 @@ def perform_gpt_query(
         return f"Invalid model. Please run the prompting help command to find the right model to use."
     try:
         client = OpenAI(api_key=API_KEY)
-        if get_number_of_tokens(query + system_message) < openAI_max_context[model]:
+        if get_number_of_tokens(query +
+                                system_message) < openAI_max_context[model]:
             completion = client.chat.completions.create(
                 model=model,
                 messages=[
-                    {"role": "system", "content": context},
-                    {"role": "user", "content": query},
+                    {
+                        "role": "system",
+                        "content": context
+                    },
+                    {
+                        "role": "user",
+                        "content": query
+                    },
                 ],
             )
             return f"""{completion.choices[0].message.content}"""
@@ -145,12 +151,10 @@ async def createQOTW(websites: str, model: str = "gpt-4o") -> str:
         website_list = [
             website.strip().replace('"', "") for website in websites.split(",")
         ]
-        data = "\n".join(
-            [
-                f"Website Source: {website} \n {await scrape_p_text(website)}"
-                for website in website_list
-            ]
-        )
+        data = "\n".join([
+            f"Website Source: {website} \n {await scrape_p_text(website)}"
+            for website in website_list
+        ])
         context = f"""
         You job is the generate a nonbiased question of the week for the discord server.
         The question should be engaging and thought-provoking, and related to AI's impact on the field beind discussed.
@@ -174,8 +178,14 @@ bonus business question, have you noticed any problems with how current robotics
             completion = client.chat.completions.create(
                 model=model,
                 messages=[
-                    {"role": "system", "content": context},
-                    {"role": "user", "content": message},
+                    {
+                        "role": "system",
+                        "content": context
+                    },
+                    {
+                        "role": "user",
+                        "content": message
+                    },
                 ],
             )
             return f"""{completion.choices[0].message.content}"""
