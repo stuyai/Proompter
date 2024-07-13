@@ -1,8 +1,17 @@
 import asyncio
 from openai import OpenAI
 import tiktoken
-from utils.scrapeWebsites import scrape_p_text
+import requests
+import json
+
+if __name__ == "__main__":
+    from scrapeWebsites import (
+        scrape_p_text,
+    )  # when running this script as a standalone script
+else:
+    from utils.scrapeWebsites import scrape_p_text
 import google.generativeai as genai
+import anthropic
 
 gpt_models = {
     "gpt-4o",
@@ -98,7 +107,6 @@ def perform_gpt_query(
             return f"""{completion.choices[0].message.content}"""
         return "The query is too long. Please try again with a shorter query."
     except Exception as e:
-        print(e)
         return f"An error occurred: {e}"
 
 
@@ -146,8 +154,124 @@ def perform_google_query(
         return f"An error occurred: {e}"
 
 
-def perform_grok_query(context:str=system_message, query:str="Hi!", model:str="") -> str:
-    ...
+def perform_grok_query(
+    context: str = system_message, query: str = "Hi!", model: str = ""
+) -> str: ...
+
+
+ANTHROPIC_API = os.getenv("CLAUDE_API")
+
+
+Anthropic_Models = {
+    "claude-3-5-sonnet-20240620",
+    "claude-3-opus-20240229",
+    "claude-3-sonnet-20240229",
+    "claude-3-haiku-20240307",
+}
+
+Anthropic_Max_Context = {
+    "claude-3-5-sonnet-20240620": 200000,
+    "claude-3-opus-20240229": 200000,
+    "claude-3-sonnet-20240229": 200000,
+    "claude-3-haiku-20240307": 200000,
+}
+
+Anthropic_Max_Output = {
+    "claude-3-5-sonnet-20240620": 4096,
+    "claude-3-opus-20240229": 4096,
+    "claude-3-sonnet-20240229": 4096,
+    "claude-3-haiku-20240307": 4096,
+}
+
+
+# ? add some token checking here
+def perform_claude_query(
+    context: str = system_message,
+    query: str = "Hi!",
+    model: str = "claude-3-5-sonnet-20240620",
+) -> str:
+    try:
+        client = anthropic.Anthropic(api_key=ANTHROPIC_API)
+        message = client.messages.create(
+            model=model,
+            max_tokens=1000,
+            temperature=0,
+            system=context,
+            messages=[
+                {"role": "user", "content": [{"type": "text", "text": f"{query}"}]}
+            ],
+        )
+        return message.content[0].text
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+
+llama_mixtral_models = {
+    "llama-3-sonar-small-32k-chat",
+    "llama-3-sonar-small-32k-online",
+    "llama-3-sonar-large-32k-chat",
+    "llama-3-sonar-large-32k-online",
+    "llama-3-8b-instruct",
+    "llama-3-70b-instruct",
+    "mixtral-8x7b-instruct",
+}
+
+llama_mixtral_context = {
+    "llama-3-sonar-small-32k-chat": 32768,
+    "llama-3-sonar-small-32k-online": 28000,
+    "llama-3-sonar-large-32k-chat": 32768,
+    "llama-3-sonar-large-32k-online": 28000,
+    "llama-3-8b-instruct": 8192,
+    "llama-3-70b-instruct": 8192,
+    "mixtral-8x7b-instruct": 16384,
+}
+
+llama_mixtral_max_output = {
+    "llama-3-sonar-small-32k-chat": "N/A",
+    "llama-3-sonar-small-32k-online": "N/A",
+    "llama-3-sonar-large-32k-chat": "N/A",
+    "llama-3-sonar-large-32k-online": "N/A",
+    "llama-3-8b-instruct": "N/A",
+    "llama-3-70b-instruct": "N/A",
+    "mixtral-8x7b-instruct": "N/A",
+}
+
+
+# ? ADD some token checking here
+PERPLEXITY_API = os.getenv("PERPLEXITY_API")
+
+
+def perform_llama_or_mixtral_query(
+    context: str = system_message,
+    query: str = "Hi!",
+    model: str = "llama-3-sonar-small-32k-online",
+):
+    try:
+        url = "https://api.perplexity.ai/chat/completions"
+
+        payload = {
+            "model": f"{model}",
+            "messages": [
+                {"role": "system", "content": f"{context}"},
+                {"role": "user", "content": f"{query}"},
+            ],
+        }
+
+        headers = {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "authorization": f"Bearer {PERPLEXITY_API}",
+        }
+
+        response = requests.post(
+            url,
+            json=payload,
+            headers=headers,
+        )
+        return response.json()["choices"][0]["message"]["content"]
+    except Exception as e:
+        return f"An error occurred: {e}"
+
 
 async def createQOTW(websites: str, model: str = "gpt-4o") -> str:
     if model not in gpt_models and model:
@@ -182,15 +306,7 @@ bonus business question, have you noticed any problems with how current robotics
         """
         message = "What is the question of the week?"
 
-        if get_number_of_tokens(message + context) < openAI_max_context[model]:
-            completion = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": context},
-                    {"role": "user", "content": message},
-                ],
-            )
-            return f"""{completion.choices[0].message.content}"""
+        return perform_gpt_query(context, message, model)
     except Exception as e:
         print(e)
         return f"An error occurred: {e}"
@@ -213,7 +329,12 @@ def get_number_of_tokens(text: str, model: str = "gpt-4o") -> list:
 
 def get_models() -> set:
     try:
-        model_lists = [gpt_models, google_models]
+        model_lists = [
+            gpt_models,
+            google_models,
+            Anthropic_Models,
+            llama_mixtral_models,
+        ]
         bl = set()
         for model_list in model_lists:
             bl = bl.union(model_list)
@@ -224,7 +345,12 @@ def get_models() -> set:
 
 
 def get_input_contexts() -> set:
-    context_lists = [openAI_max_context, gemini_max_context]
+    context_lists = [
+        openAI_max_context,
+        gemini_max_context,
+        Anthropic_Max_Context,
+        llama_mixtral_context,
+    ]
     bl = {}
     for context_list in context_lists:
         bl.update(context_list)
@@ -233,7 +359,12 @@ def get_input_contexts() -> set:
 
 
 def get_output_contexts() -> set:
-    context_lists = [openAI_max_context, gemini_max_output]
+    context_lists = [
+        openAI_max_context,
+        gemini_max_output,
+        Anthropic_Max_Output,
+        llama_mixtral_max_output,
+    ]
     bl = {}
     for context_list in context_lists:
         bl.update(context_list)
@@ -241,11 +372,4 @@ def get_output_contexts() -> set:
 
 
 if __name__ == "__main__":
-    print("hello")
-    print(
-        perform_google_query(
-            system_message,
-            "Write a poem about Discord in the writing of Emily Dickenson",
-            "gemini-1.5-pro",
-        )
-    )
+    print(perform_llama_or_mixtral_query())

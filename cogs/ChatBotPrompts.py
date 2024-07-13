@@ -26,6 +26,10 @@ class ChatBotPrompts(commands.Cog):
                 response = gptFunctions.perform_gpt_query(query=message, model=model)
             elif "gemini" in model:
                 response = gptFunctions.perform_google_query(query=message, model=model)
+            elif "claude" in model:
+                response = gptFunctions.perform_claude_query(query=message, model=model)
+            elif "llama" in model or "mixtral" in model:
+                response = gptFunctions.perform_llama_or_mixtral_query(query=message, model=model)
 
             embed = discord.Embed(title="Chatbot Prompt", color=discord.Color.blue())
             embed.set_author(
