@@ -3,6 +3,7 @@ from discord.ext import commands
 import discord
 from utils import gptFunctions, EconomyFunctions
 
+
 class ChatBotPrompts(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
@@ -16,15 +17,21 @@ class ChatBotPrompts(commands.Cog):
         self, interaction: discord.Interaction, message: str, model: str = "gpt-4o"
     ):
         await interaction.response.defer()
-        
-        balance = EconomyFunctions.getBalance(interaction.user.id, interaction.user.name)
-        
-        if balance < 10: 
-            await interaction.followup.send("You do not have enough mone to use this command", ephemeral=True)
+
+        balance = EconomyFunctions.getBalance(
+            interaction.user.id, interaction.user.name
+        )
+
+        if balance < 10:
+            await interaction.followup.send(
+                "You do not have enough mone to use this command", ephemeral=True
+            )
             return
         else:
-            EconomyFunctions.setBalance(interaction.user.id, interaction.user.name, balance - 10)
-        
+            EconomyFunctions.setBalance(
+                interaction.user.id, interaction.user.name, balance - 10
+            )
+
         try:
             if len(message) < 1:
                 await interaction.response.send_message("Please provide a query")
