@@ -6,6 +6,7 @@ from utils import EconomyFunctions, gptFunctions
 
 
 class ChatBotPrompts(commands.Cog):
+    """ """
     def __init__(self, client: commands.Bot):
         self.client = client
         super().__init__()
