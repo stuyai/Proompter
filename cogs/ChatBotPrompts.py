@@ -38,24 +38,29 @@ class ChatBotPrompts(commands.Cog):
                 return
 
             if "gpt" in model:
-                response = gptFunctions.perform_gpt_query(query=message, model=model)
+                response = gptFunctions.perform_gpt_query(
+                    query=message, model=model)
             elif "gemini" in model:
-                response = gptFunctions.perform_google_query(query=message, model=model)
+                response = gptFunctions.perform_google_query(
+                    query=message, model=model)
             elif "claude" in model:
-                response = gptFunctions.perform_claude_query(query=message, model=model)
+                response = gptFunctions.perform_claude_query(
+                    query=message, model=model)
             elif "llama" in model or "mixtral" in model:
                 response = gptFunctions.perform_llama_or_mixtral_query(
                     query=message, model=model
                 )
 
-            embed = discord.Embed(title="Chatbot Prompt", color=discord.Color.blue())
+            embed = discord.Embed(title="Chatbot Prompt",
+                                  color=discord.Color.blue())
             embed.set_author(
                 name=f"query by {interaction.user.display_name} and response from {model}",
                 icon_url=interaction.user.avatar,
             )
             embed.add_field(name="Query", value=message, inline=False)
             embed.add_field(name="Response", value=response, inline=False)
-            embed.add_field(name="Remaining Balance", value=balance - 10, inline=False)
+            embed.add_field(name="Remaining Balance",
+                            value=balance - 10, inline=False)
             await interaction.followup.send(embed=embed)
         except Exception as e:
             await interaction.followup.send(f"An error occured: {e}", ephemeral=True)
