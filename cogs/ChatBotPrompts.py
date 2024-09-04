@@ -69,7 +69,7 @@ class ChatBotPrompts(commands.Cog):
         try:
             response = await gptFunctions.createQOTW(websites)
             sources = ""
-            for source in websites.split(','):
+            for source in websites.split(","):
                 sources += f"{source.strip()}\n"
             sources = f"Sources: \n{sources}"
             await interaction.followup.send(
