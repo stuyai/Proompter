@@ -8,63 +8,71 @@ from utils import gptFunctions
 
 class ChatBotPrompts(commands.Cog):
     """ """
+
     def __init__(self, client: commands.Bot):
         self.client = client
         super().__init__()
 
-    @app_commands.command(
-        name="simple_query", description="Give a simple query to the bot"
-    )
+    @app_commands.command(name="simple_query",
+                          description="Give a simple query to the bot")
     @commands.cooldown(1, 15, commands.BucketType.user)
-    async def simple_query(
-        self, interaction: discord.Interaction, message: str, model: str = "gpt-4o"
-    ):
+    async def simple_query(self,
+                           interaction: discord.Interaction,
+                           message: str,
+                           model: str = "gpt-4o"):
         await interaction.response.defer()
 
-        balance = EconomyFunctions.getBalance(
-            str(interaction.user.id), interaction.user.name
-        )
+        balance = EconomyFunctions.getBalance(str(interaction.user.id),
+                                              interaction.user.name)
 
         if balance < 10:
             await interaction.followup.send(
-                "You do not have enough mone to use this command", ephemeral=True
-            )
+                "You do not have enough mone to use this command",
+                ephemeral=True)
             return
         else:
-            EconomyFunctions.setBalance(
-                str(interaction.user.id), interaction.user.name, balance - 10
-            )
+            EconomyFunctions.setBalance(str(interaction.user.id),
+                                        interaction.user.name, balance - 10)
 
         try:
             if len(message) < 1:
-                await interaction.response.send_message("Please provide a query")
+                await interaction.response.send_message(
+                    "Please provide a query")
                 return
 
             if "gpt" in model:
-                response = gptFunctions.perform_gpt_query(query=message, model=model)
+                response = gptFunctions.perform_gpt_query(query=message,
+                                                          model=model)
             elif "gemini" in model:
-                response = gptFunctions.perform_google_query(query=message, model=model)
+                response = gptFunctions.perform_google_query(query=message,
+                                                             model=model)
             elif "claude" in model:
-                response = gptFunctions.perform_claude_query(query=message, model=model)
+                response = gptFunctions.perform_claude_query(query=message,
+                                                             model=model)
             elif "llama" in model or "mixtral" in model:
                 response = gptFunctions.perform_llama_or_mixtral_query(
-                    query=message, model=model
-                )
+                    query=message, model=model)
 
-            embed = discord.Embed(title="Chatbot Prompt", color=discord.Color.blue())
+            embed = discord.Embed(title="Chatbot Prompt",
+                                  color=discord.Color.blue())
             embed.set_author(
-                name=f"query by {interaction.user.display_name} and response from {model}",
+                name=
+                f"query by {interaction.user.display_name} and response from {model}",
                 icon_url=interaction.user.avatar,
             )
             embed.add_field(name="Query", value=message, inline=False)
             embed.add_field(name="Response", value=response, inline=False)
-            embed.add_field(name="Remaining Balance", value=balance - 10, inline=False)
+            embed.add_field(name="Remaining Balance",
+                            value=balance - 10,
+                            inline=False)
             await interaction.followup.send(embed=embed)
         except Exception as e:
-            await interaction.followup.send(f"An error occured: {e}", ephemeral=True)
+            await interaction.followup.send(f"An error occured: {e}",
+                                            ephemeral=True)
 
     @app_commands.checks.has_permissions(administrator=True)
-    @app_commands.command(name="qotw", description="Get the question of the week")
+    @app_commands.command(name="qotw",
+                          description="Get the question of the week")
     @commands.cooldown(1, 15, commands.BucketType.user)
     async def qotw(self, interaction: discord.Interaction, websites: str):
         # https://stackoverflow.com/questions/67249570/how-do-i-mention-everyone-in-discord-py
@@ -81,14 +89,16 @@ class ChatBotPrompts(commands.Cog):
                 suppress_embeds=True,
             )
         except Exception as e:
-            await interaction.followup.send(f"An error occured: {e}", ephemeral=True)
+            await interaction.followup.send(f"An error occured: {e}",
+                                            ephemeral=True)
 
     @commands.Cog.listener()
     async def on_ready(self):
         print("ChatBotPrompts.py is ready")
 
     @app_commands.command()
-    async def prompting_help(self, interaction: discord.Interaction): ...
+    async def prompting_help(self, interaction: discord.Interaction):
+        ...
 
     @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
@@ -106,9 +116,8 @@ class ChatBotPrompts(commands.Cog):
     )
     async def max_context(self, interaction: discord.Interaction):
         context = gptFunctions.get_input_contexts()
-        await interaction.response.send_message(
-            "\n".join(f"{key}: {value}" for key, value in context.items())
-        )
+        await interaction.response.send_message("\n".join(
+            f"{key}: {value}" for key, value in context.items()))
 
     @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
@@ -117,9 +126,8 @@ class ChatBotPrompts(commands.Cog):
     )
     async def max_output(self, interaction: discord.Interaction):
         output = gptFunctions.get_output_contexts()
-        await interaction.response.send_message(
-            "\n".join(f"{key}: {value}" for key, value in output.items())
-        )
+        await interaction.response.send_message("\n".join(
+            f"{key}: {value}" for key, value in output.items()))
 
 
 async def setup(client):
