@@ -19,7 +19,7 @@ class ChatBotPrompts(commands.Cog):
         await interaction.response.defer()
 
         balance = EconomyFunctions.getBalance(
-            interaction.user.id, interaction.user.name
+            str(interaction.user.id), interaction.user.name
         )
 
         if balance < 10:
@@ -29,7 +29,7 @@ class ChatBotPrompts(commands.Cog):
             return
         else:
             EconomyFunctions.setBalance(
-                interaction.user.id, interaction.user.name, balance - 10
+                str(interaction.user.id), interaction.user.name, balance - 10
             )
 
         try:
@@ -68,7 +68,7 @@ class ChatBotPrompts(commands.Cog):
         await interaction.response.defer()
         try:
             response = await gptFunctions.createQOTW(websites)
-            sources = f"Sources: \n{"\n".join(" ".join(source.split()) for source in websites.split(","))}"
+            sources = f"Sources: \n{'\n'.join(' '.join(source.split()) for source in websites.split(','))}"
             await interaction.followup.send(
                 response + "\n\n" + sources,
                 allowed_mentions=discord.AllowedMentions(everyone=True),
