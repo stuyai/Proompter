@@ -1,7 +1,8 @@
+import discord
 from discord import app_commands
 from discord.ext import commands
-import discord
-from utils import gptFunctions, EconomyFunctions
+
+from utils import EconomyFunctions, gptFunctions
 
 
 class ChatBotPrompts(commands.Cog):
