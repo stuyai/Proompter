@@ -29,7 +29,7 @@ class ChatBotPrompts(commands.Cog):
             return
         else:
             EconomyFunctions.setBalance(
-                str(interaction.user.id), interaction.user.name, balance - 10
+                str(interaction.user.id), interaction.user.name, str(balance - 10)
             )
 
         try:
@@ -54,8 +54,15 @@ class ChatBotPrompts(commands.Cog):
                 icon_url=interaction.user.avatar,
             )
             embed.add_field(name="Query", value=message, inline=False)
-            # embed.add_field(name="Response", value=response, inline=False)
             response_chunks = [response[i:i+1024] for i in range(0, len(response), 1024)]
+            if len(response_chunks) == 1:
+                embed.add_field(name="Response", value=response, inline=False)
+            else:
+                for i, chunk in enumerate(response_chunks):
+                    if i == 0:
+                        embed.add_field(name="Response", value=chunk, inline=False)
+                    else:
+                        embed.add_field(name=f"{i+1}", value=chunk, inline=False)
             for i, chunk in enumerate(response_chunks):
                 embed.add_field(name=f"Response {i+1}", value=chunk, inline=False)
             embed.add_field(name="Remaining Balance", value=balance - 10, inline=False)
@@ -106,9 +113,12 @@ class ChatBotPrompts(commands.Cog):
     )
     async def max_context(self, interaction: discord.Interaction):
         context = gptFunctions.get_input_contexts()
-        await interaction.response.send_message(
-            "\n".join(f"{key}: {value}" for key, value in context.items())
-        )
+        if isinstance(context, dict):
+            await interaction.response.send_message(
+                "\n".join(f"{key}: {value}" for key, value in context.items())
+            )
+        else:
+            await interaction.response.send_message("Invalid context")
 
     @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
@@ -117,9 +127,12 @@ class ChatBotPrompts(commands.Cog):
     )
     async def max_output(self, interaction: discord.Interaction):
         output = gptFunctions.get_output_contexts()
-        await interaction.response.send_message(
-            "\n".join(f"{key}: {value}" for key, value in output.items())
-        )
+        if isinstance(output, dict):
+            await interaction.response.send_message(
+                "\n".join(f"{key}: {value}" for key, value in output.items())
+            )
+        else:
+            await interaction.response.send_message("Invalid output")
 
 
 async def setup(client):
