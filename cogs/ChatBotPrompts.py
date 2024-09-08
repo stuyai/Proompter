@@ -54,7 +54,10 @@ class ChatBotPrompts(commands.Cog):
                 icon_url=interaction.user.avatar,
             )
             embed.add_field(name="Query", value=message, inline=False)
-            embed.add_field(name="Response", value=response, inline=False)
+            # embed.add_field(name="Response", value=response, inline=False)
+            response_chunks = [response[i:i+1024] for i in range(0, len(response), 1024)]
+            for i, chunk in enumerate(response_chunks):
+                embed.add_field(name=f"Response {i+1}", value=chunk, inline=False)
             embed.add_field(name="Remaining Balance", value=balance - 10, inline=False)
             await interaction.followup.send(embed=embed)
         except Exception as e:
