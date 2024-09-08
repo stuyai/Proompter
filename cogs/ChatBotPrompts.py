@@ -62,9 +62,7 @@ class ChatBotPrompts(commands.Cog):
                     if i == 0:
                         embed.add_field(name="Response", value=chunk, inline=False)
                     else:
-                        embed.add_field(name=f"{i+1}", value=chunk, inline=False)
-            for i, chunk in enumerate(response_chunks):
-                embed.add_field(name=f"Response {i+1}", value=chunk, inline=False)
+                        embed.add_field(name=f"(continued....)", value=chunk, inline=False)
             embed.add_field(name="Remaining Balance", value=balance - 10, inline=False)
             await interaction.followup.send(embed=embed)
         except Exception as e:
