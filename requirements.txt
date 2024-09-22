@@ -20,7 +20,7 @@ executing==2.1.0
 filelock==3.16.0
 frozenlist==1.4.1
 fsspec==2024.9.0
-google-ai-generativelanguage==0.6.6
+google-ai-generativelanguage==0.6.9
 google-api-core==2.19.2
 google-api-python-client==2.145.0
 google-auth==2.34.0
