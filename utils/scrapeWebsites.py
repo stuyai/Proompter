@@ -15,10 +15,9 @@ async def scrape_p_text(url: str) -> str:
 
         # Get all text from <p> tags
         p_tags = await page.query_selector_all("p")
-        p_texts = [await p.text_content() for p in p_tags]
+        p_texts = [await p.text_content() for p in p_tags if await p.text_content() is not None]
 
         await browser.close()
-
         text = " ".join(p_texts)
         text.replace("  ", " ")
         return text

@@ -102,7 +102,7 @@ class ChatBotPrompts(commands.Cog):
     )
     async def list_models(self, interaction: discord.Interaction):
         models = gptFunctions.get_models()
-        await interaction.response.send_message("\n".join(models))
+        await interaction.response.send_message("\n".join(models), ephemeral= True)
 
     @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(
