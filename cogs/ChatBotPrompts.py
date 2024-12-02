@@ -36,7 +36,7 @@ class ChatBotPrompts(commands.Cog):
             if len(message) < 1:
                 await interaction.response.send_message("Please provide a query")
                 return
-
+            response = ""
             if "gpt" in model:
                 response = gptFunctions.perform_gpt_query(query=message, model=model)
             elif "gemini" in model:
@@ -62,7 +62,7 @@ class ChatBotPrompts(commands.Cog):
                     if i == 0:
                         embed.add_field(name="Response", value=chunk, inline=False)
                     else:
-                        embed.add_field(name=f"(continued....)", value=chunk, inline=False)
+                        embed.add_field(name="(continued....)", value=chunk, inline=False)
             embed.add_field(name="Remaining Balance", value=balance - 10, inline=False)
             await interaction.followup.send(embed=embed)
         except Exception as e:
@@ -92,8 +92,18 @@ class ChatBotPrompts(commands.Cog):
     async def on_ready(self):
         print("ChatBotPrompts.py is ready")
 
-    @app_commands.command()
-    async def prompting_help(self, interaction: discord.Interaction): ...
+    @app_commands.command(
+        name="help",
+        description="get started on proompting!!!",
+    )
+    async def prompting_help(self, interaction: discord.Interaction):
+        embed = discord.Embed(title="Prompting Help", color=discord.Color.blue())
+        embed.add_field(name="Simple Query", value="Use the command `/simple_query` to prompt the bot", inline=False)
+        embed.add_field(name="Question of the Week", value="Use the command `/qotw` to get the question of the week", inline=False)
+        embed.add_field(name="List Models", value="Use the command `/list_models` to list all the models that can be used by prompting", inline=False)
+        embed.add_field(name="Max Context", value="Use the command `/max_context` to list the max number of context tokens a model can have", inline=False)
+        embed.add_field(name="Max Output", value="Use the command `/max_output` to list the max number of output tokens a model can have", inline=False)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @commands.cooldown(1, 15, commands.BucketType.user)
     @app_commands.command(

@@ -5,7 +5,7 @@ This project is a Python-based chatbot that utilizes various libraries to provid
 ## TODO
 
 - Add help function
-
+- Add stuff from AIsuite
 
 ## Features
 

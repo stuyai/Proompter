@@ -1,8 +1,6 @@
-import asyncio
 from openai import OpenAI
 import tiktoken
 import requests
-import json
 
 if __name__ == "__main__":
     from scrapeWebsites import (
@@ -42,7 +40,6 @@ openAI_max_context = {
     "gpt-4-0613": 8192,
     "gpt-4-0314": 8192,
     "gpt-3.5-turbo-0125": 16385,
-    "gpt-3.5-turbo": 16385,
     "gpt-3.5-turbo-1106": 16385,
     "gpt-3.5-turbo-instruct": 4096,
 }
@@ -59,7 +56,6 @@ OpenAI_Input_Million_Token_Cost = {
     "gpt-4-0613": 5,
     "gpt-4-0314": 5,
     "gpt-3.5-turbo-0125": 0.5,
-    "gpt-3.5-turbo": 0.5,
     "gpt-3.5-turbo-1106": 0.5,
     "gpt-3.5-turbo-instruct": 1.5,
 }
@@ -76,7 +72,6 @@ OpenAI_Output_Million_Token_Cost = {
     "gpt-4-0613": 15,
     "gpt-4-0314": 15,
     "gpt-3.5-turbo-0125": 1.5,
-    "gpt-3.5-turbo": 1.5,
     "gpt-3.5-turbo-1106": 1.5,
     "gpt-3.5-turbo-instruct": 2,
 }
@@ -93,7 +88,7 @@ def perform_gpt_query(
     context: str = system_message, query: str = "Hi!", model: str = "gpt-4o"
 ) -> str:
     if model not in gpt_models:
-        return f"Invalid model. Please run the prompting help command to find the right model to use."
+        return "Invalid model. Please run the prompting help command to find the right model to use."
     try:
         client = OpenAI(api_key=API_KEY)
         if get_number_of_tokens(query + system_message) < openAI_max_context[model]:
@@ -149,7 +144,7 @@ def perform_google_query(
                 return response.text
             return "The query is too long. Please try again with a shorter query."
         else:
-            return f"Invalid model. Please run the prompting help command to find the right model to use."
+            return "Invalid model. Please run the prompting help command to find the right model to use."
     except Exception as e:
         return f"An error occurred: {e}"
 
@@ -201,7 +196,9 @@ def perform_claude_query(
                 {"role": "user", "content": [{"type": "text", "text": f"{query}"}]}
             ],
         )
-        return message.content[0].text
+        if (message.content[0].text != None):
+            return message.content[0].text
+        return "message text dne"
     except Exception as e:
         return f"An error occurred: {e}"
 
@@ -275,9 +272,8 @@ def perform_llama_or_mixtral_query(
 
 async def createQOTW(websites: str, model: str = "gpt-4o") -> str:
     if model not in gpt_models and model:
-        return f"Invalid model. Please run the prompting help command to find the right model to use."
+        return "Invalid model. Please run the prompting help command to find the right model to use."
     try:
-        client = OpenAI(api_key=API_KEY)
         website_list = [
             website.strip().replace('"', "") for website in websites.split(",")
         ]
@@ -289,10 +285,10 @@ async def createQOTW(websites: str, model: str = "gpt-4o") -> str:
         )
         context = f"""
         You job is the generate a nonbiased question of the week for the discord server.
-        The question should be engaging and thought-provoking, and related to AI's impact on the field beind discussed. 
+        The question should be engaging and thought-provoking, and related to AI's impact on the field beind discussed.
         Provide sufficient information from the article to ensure the question can be understood with no previous knowledge of the topic or figures involved by an audience of NYC High School students :).
-    
-        
+
+
         Here are a few examples:
          - hello @everyone! Recent developments in the robotics industry (Boston Dynamics' All New Atlas and OpenAI's Figure 1) have been creating concerns of a replacement robotic work force. Morals aside, what areas of work would you think the combination of the physical capabilities of robots and the "mental" capabilties of AI excel in?
 bonus business question, have you noticed any problems with how current robotics companies are approaching mundane task completion?
@@ -300,7 +296,7 @@ bonus business question, have you noticed any problems with how current robotics
          - hello @everyone! There is a lot of tension occurring within the field of comptuer science, especially with devin, the first "AI software engineer". Nvidia CEO Jensen Huang believes that "English will be the new primary coding language" while others disagree, saying that if calculators never replaced mathematicians,  why would AI replace software engineers? What are your thoughts on this? Do you beleive that the tides of CS will shift towards AI or remain in the hands of humans?
          - hello @everyone! As AI permeates into creative industries, the art of video game storytelling in regards to AI has been a topic of heated debate. What video game genres do you think developer AI would excel in? Story games? Puzzle platformers? Shooters?
          - hello @everyone! As more people join in on the AI bandwagon, who are the figures within the AI field that you look up to or admire?
-        
+
         Here is the context to generate the question:
         {data}
         """
@@ -322,12 +318,12 @@ def get_encodings(text: str, model: str = "gpt-4o") -> list:
     return encoding.encode(text)
 
 
-def get_number_of_tokens(text: str, model: str = "gpt-4o") -> list:
+def get_number_of_tokens(text: str, model: str = "gpt-4o") -> int:
     encoding = tiktoken.encoding_for_model(model)
     return len(encoding.encode(text))
 
 
-def get_models() -> set:
+def get_models():
     try:
         model_lists = [
             gpt_models,
@@ -344,7 +340,7 @@ def get_models() -> set:
         return "An error occurred"
 
 
-def get_input_contexts() -> set:
+def get_input_contexts() -> dict:
     context_lists = [
         openAI_max_context,
         gemini_max_context,
@@ -358,7 +354,7 @@ def get_input_contexts() -> set:
     return bl
 
 
-def get_output_contexts() -> set:
+def get_output_contexts() -> dict:
     context_lists = [
         openAI_max_context,
         gemini_max_output,

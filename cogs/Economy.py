@@ -75,7 +75,7 @@ class Economy(commands.Cog):
     async def setUserValue(
         self, interaction: discord.Interaction, member: discord.Member, value: int
     ):
-        EconomyFunctions.setBalance(member.id, member.name, value)
+        EconomyFunctions.setBalance(str(member.id), member.name, str(value))
         await interaction.response.send_message(
             f"User {member.name} now has a balance of {value}"
         )
