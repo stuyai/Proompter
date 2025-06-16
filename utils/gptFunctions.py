@@ -106,7 +106,6 @@ def perform_gpt_query(
 
 
 GOOGLE_API = os.getenv("GOOGLE_API")
-genai.configure(api_key=GOOGLE_API)
 # def perform_facebook_query(context: str = system_message, query: str = "Hi!", model: str = ) -> str:
 
 google_models = {
@@ -116,15 +115,15 @@ google_models = {
 }
 
 gemini_max_context = {
-    "gemini-1.0-pro": genai.get_model("models/gemini-1.0-pro").input_token_limit,
-    "gemini-1.5-flash": genai.get_model("models/gemini-1.5-flash").input_token_limit,
-    "gemini-1.5-pro": genai.get_model("models/gemini-1.5-pro").input_token_limit,
+    "gemini-1.0-pro": 100000,
+    "gemini-1.5-flash": 100000,
+    "gemini-1.5-pro":100000,
 }
 
 gemini_max_output = {
-    "gemini-1.0-pro": genai.get_model("models/gemini-1.0-pro").output_token_limit,
-    "gemini-1.5-flash": genai.get_model("models/gemini-1.5-flash").output_token_limit,
-    "gemini-1.5-pro": genai.get_model("models/gemini-1.5-pro").output_token_limit,
+    "gemini-1.0-pro": 100000,
+    "gemini-1.5-flash":100000 ,
+    "gemini-1.5-pro": 100000,
 }
 
 
