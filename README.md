@@ -64,7 +64,6 @@ For a full list of dependencies, refer to the [requirements.txt](requirements.tx
 5. Add an env file with the following information with the following structure. Read about creating your own [Discord](https://discord.com/) bot and application [here](https://www.geeksforgeeks.org/discord-bot-in-python/) and [here](https://realpython.com/how-to-make-a-discord-bot-python/), and learn about using gpt and creating your own API key [here](https://platform.openai.com/docs/overview).
 
    ```env
-   export BOT_TOKEN="<Insert the token for your bot here>"
    export BOT_TOKEN="<Insert token for bot here>"
    export GPT_API_KEY="<Insert your gpt api key here>"
    export NYTIMES_API_KEY="<Insert your NYtimes api key here>"
